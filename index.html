@@ -1,0 +1,140 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#05070a" />
+    <meta name="description" content="NODAL is an independent spatial design studio building digital worlds for the post-screen era." />
+    <title>NODAL — Spatial Design Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="backdrop" aria-hidden="true">
+      <canvas id="scene"></canvas>
+      <div class="fallback-orbit"></div>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="NODAL home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>NODAL</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Primary">
+        <a href="#index">01 / Index</a>
+        <a href="work.html">02 / Work</a>
+        <a href="#studio">03 / Studio</a>
+        <a href="letters.html">04 / Letters</a>
+      </nav>
+
+      <a class="header-cta" href="mailto:hello@nodal.studio">
+        <span>Start a project</span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-label">Menu</span>
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Mobile">
+        <a href="#index"><span>01</span> Index</a>
+        <a href="work.html"><span>02</span> Work</a>
+        <a href="#studio"><span>03</span> Studio</a>
+        <a href="letters.html"><span>04</span> Letters</a>
+        <a href="mailto:hello@nodal.studio"><span>04</span> Contact</a>
+      </nav>
+      <p>London / New York<br />Available Q1 2027</p>
+    </div>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow reveal" style="--delay: 0.05s">
+            <span class="status-dot" aria-hidden="true"></span>
+            Independent spatial studio / 2026
+          </p>
+
+          <h1 class="reveal" style="--delay: 0.14s">
+            Worlds, built
+            <span class="outline">in three</span>
+            <em>dimensions.</em>
+          </h1>
+
+          <p class="intro reveal" style="--delay: 0.24s">
+            We design digital identities, interfaces and environments for brands ready to move beyond the flat web.
+          </p>
+
+          <div class="hero-actions reveal" style="--delay: 0.32s">
+            <a class="button button-primary" href="mailto:hello@nodal.studio">
+              <span>Start a project</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-ghost" href="#work">
+              <span>Explore the work</span>
+              <span class="arrow-down" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="scene-label scene-label--top" aria-hidden="true">
+          <span>Live simulation</span>
+          <span>04:21:09 GMT</span>
+        </div>
+
+        <div class="drag-hint" aria-hidden="true">
+          <span class="drag-orbit"><i></i></span>
+          <span>Drag to orbit</span>
+        </div>
+
+        <div class="hero-footer reveal" style="--delay: 0.42s">
+          <div class="coords"><span>51.5072° N</span><span>0.1276° W</span></div>
+          <div class="scroll-cue" aria-hidden="true"><span>Scroll to enter</span><i></i></div>
+          <div class="availability"><span class="status-dot" aria-hidden="true"></span><span>Available for select projects</span></div>
+        </div>
+      </section>
+
+      <section class="work-preview" id="work">
+        <div class="section-head reveal">
+          <p class="section-index">02 / Selected work</p>
+          <h2>Objects for the next layer of the internet.</h2>
+        </div>
+
+        <div class="project-list">
+          <a class="project-row reveal" href="#contact">
+            <span class="project-number">01</span><span class="project-name">Aether OS</span><span class="project-type">Spatial identity / Interface</span><span class="project-year">2026</span><span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="project-row reveal" href="#contact">
+            <span class="project-number">02</span><span class="project-name">Kinetic Field</span><span class="project-type">Brand world / WebGL</span><span class="project-year">2025</span><span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="project-row reveal" href="#contact">
+            <span class="project-number">03</span><span class="project-name">Matter / Mind</span><span class="project-type">Exhibition / Digital twin</span><span class="project-year">2025</span><span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <a class="archive-link reveal" href="work.html">Open the full archive <span aria-hidden="true">↗</span></a>
+      </section>
+
+      <footer class="site-footer" id="studio">
+        <div class="footer-top reveal">
+          <p>Have a world in mind?</p>
+          <a href="mailto:hello@nodal.studio">hello@nodal.studio</a>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 NODAL Studio</span>
+          <a href="#top">Back to the beginning ↑</a>
+          <div class="socials"><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a><a href="#contact">Are.na</a></div>
+        </div>
+        <div id="contact" class="anchor-target" aria-hidden="true"></div>
+      </footer>
+    </main>
+
+    <noscript><div class="noscript">This experience works best with JavaScript enabled.</div></noscript>
+    <script src="app.js" defer></script>
+  </body>
+</html>

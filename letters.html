@@ -1,0 +1,355 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#05070a" />
+    <meta name="description" content="Welcome to Jason World, with JASON rendered in 3D." />
+    <title>Welcome to Jason World</title>
+    <style>
+      :root {
+        --ink: #05070a;
+        --paper: #edf0e9;
+        --red: #ff3b30;
+        --green: #29ef76;
+        --line: rgba(237, 240, 233, 0.16);
+        --sans: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--ink); scroll-behavior: smooth; }
+
+      body {
+        min-width: 320px;
+        min-height: 100svh;
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--paper);
+        background:
+          radial-gradient(circle at 18% 18%, rgba(255, 59, 48, 0.14), transparent 30rem),
+          radial-gradient(circle at 82% 72%, rgba(41, 239, 118, 0.13), transparent 32rem),
+          var(--ink);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(237, 240, 233, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(237, 240, 233, 0.035) 1px, transparent 1px);
+        background-size: 4rem 4rem;
+        content: "";
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 88%);
+        pointer-events: none;
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        min-height: 100svh;
+        grid-template-rows: auto 1fr auto;
+        padding: 1.4rem clamp(1.25rem, 4vw, 4rem) 1.5rem;
+      }
+
+      .shooting-stars { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+      .shooting-star { position: absolute; width: var(--star-length, 7rem); height: 1px; border-radius: 999px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.2) 42%, #fff 100%); box-shadow: 0 0 .55rem rgba(255,255,255,.78); opacity: 0; transform-origin: right center; animation: shoot var(--star-duration, 3.8s) linear var(--star-delay, 0s) infinite; }
+
+      .header, .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        color: rgba(237, 240, 233, 0.52);
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .brand { display: inline-flex; align-items: center; gap: 0.65rem; color: var(--paper); font-weight: 700; letter-spacing: 0.2em; }
+      .brand-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--green); box-shadow: 0 0 1rem rgba(41, 239, 118, 0.65); }
+      .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
+      .sound-toggle { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.55rem 0.72rem; border: 1px solid var(--line); color: rgba(237, 240, 233, 0.7); background: rgba(5, 7, 10, 0.52); font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease; }
+      .sound-toggle:hover, .sound-toggle:focus-visible { color: var(--paper); border-color: rgba(237, 240, 233, 0.45); outline: none; }
+      .sound-toggle.is-playing { color: var(--green); border-color: rgba(41, 239, 118, 0.55); background: rgba(41, 239, 118, 0.06); }
+      .sound-bars { display: flex; height: 0.8rem; align-items: flex-end; gap: 2px; }
+      .sound-bars i { display: block; width: 2px; height: 30%; background: currentColor; animation: sound-bar 700ms ease-in-out infinite alternate; animation-play-state: paused; }
+      .sound-bars i:nth-child(2) { animation-delay: -220ms; }
+      .sound-bars i:nth-child(3) { animation-delay: -440ms; }
+      .sound-toggle.is-playing .sound-bars i { animation-play-state: running; }
+      .back-link { padding-bottom: 0.3rem; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; transition: color 200ms ease, border-color 200ms ease; }
+      .back-link:hover, .back-link:focus-visible { color: var(--green); border-color: var(--green); }
+
+      .welcome {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(3.5rem, 8vh, 6rem) 0 2rem;
+      }
+
+      .eyebrow { margin: 0 0 1.15rem; color: rgba(237, 240, 233, 0.54); font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(3.6rem, 9.5vw, 8.5rem); font-weight: 500; line-height: 0.8; letter-spacing: -0.085em; }
+      .welcome-red, .welcome-green { display: block; }
+      .welcome-red { color: var(--red); text-shadow: 0 0 2.8rem rgba(255, 59, 48, 0.23); }
+      .welcome-green { margin-left: clamp(0.2rem, 5vw, 5rem); color: var(--green); text-shadow: 0 0 2.8rem rgba(41, 239, 118, 0.2); }
+      .message { max-width: 33rem; margin: clamp(1.4rem, 3vw, 2.2rem) 0 0 clamp(0.2rem, 5vw, 5rem); color: rgba(237, 240, 233, 0.62); font-size: clamp(0.9rem, 1.2vw, 1.08rem); line-height: 1.7; }
+
+      .letters-section {
+        display: grid;
+        place-items: center;
+        min-height: 34rem;
+        padding: 2rem 0 3rem;
+      }
+
+      .letters-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .word-stage { position: relative; display: grid; width: min(88rem, 100%); min-height: 31rem; place-items: center; perspective: 1400px; cursor: grab; user-select: none; touch-action: none; }
+      .word-stage:focus-visible { outline: 1px solid var(--green); outline-offset: 0.8rem; }
+      .word-stage.is-dragging { cursor: grabbing; }
+      .word-stage::before { position: absolute; width: min(58vw, 38rem); aspect-ratio: 1; border: 1px solid rgba(237, 240, 233, 0.07); border-radius: 50%; box-shadow: inset 0 0 5rem rgba(255, 59, 48, 0.035); content: ""; }
+
+      .word { position: relative; display: flex; align-items: center; justify-content: center; gap: clamp(0.1rem, 1vw, 0.75rem); transform-style: preserve-3d; will-change: transform; }
+      .letter { position: relative; display: inline-block; font-size: clamp(6rem, 18vw, 16.5rem); font-weight: 700; line-height: 0.78; letter-spacing: -0.095em; text-transform: uppercase; transform-style: preserve-3d; animation: letter-float var(--float-speed, 5s) ease-in-out var(--float-delay, 0s) infinite; }
+      .letter-layer, .letter-face { display: block; white-space: nowrap; }
+      .letter-layer { position: absolute; inset: 0; z-index: -1; color: var(--layer-color); transform: translateZ(calc(var(--layer) * -1px)); }
+      .letter-face { position: relative; z-index: 2; background: linear-gradient(145deg, #fff 0%, var(--letter-color) 38%, color-mix(in srgb, var(--letter-color) 55%, #061018) 100%); background-clip: text; -webkit-background-clip: text; color: transparent; }
+
+      .drag-hint { display: flex; align-items: center; gap: 0.65rem; margin: 0; color: rgba(237, 240, 233, 0.45); font-family: var(--mono); font-size: 0.57rem; letter-spacing: 0.14em; text-transform: uppercase; }
+      .drag-hint::before { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--red); box-shadow: 0 0 0.8rem rgba(255, 59, 48, 0.7); content: ""; }
+      .status { display: inline-flex; align-items: center; gap: 0.65rem; }
+      .status::before { width: 0.42rem; height: 0.42rem; border-radius: 50%; background: var(--green); box-shadow: 0 0 0.9rem rgba(41, 239, 118, 0.7); content: ""; }
+      .footer a { color: inherit; text-decoration: none; transition: color 200ms ease; }
+      .footer a:hover, .footer a:focus-visible { color: var(--green); }
+
+      @keyframes sound-bar { from { height: 22%; } to { height: 100%; } }
+
+      @keyframes shoot {
+        0%, 6% { opacity: 0; transform: translate3d(0, 0, 0) rotate(31deg); }
+        10% { opacity: var(--star-opacity, .9); }
+        68% { opacity: var(--star-opacity, .9); }
+        78%, 100% { opacity: 0; transform: translate3d(var(--star-x, 80vw), var(--star-y, 48vh), 0) rotate(31deg); }
+      }
+
+      @keyframes letter-float {
+        0%, 100% { translate: 0 -0.25rem; }
+        50% { translate: 0 0.35rem; }
+      }
+
+      @media (max-width: 620px) {
+        .header { align-items: flex-start; }
+        .header .back-link { max-width: 8rem; text-align: right; line-height: 1.6; }
+        h1 { font-size: clamp(3.2rem, 17vw, 5.4rem); }
+        .welcome-green { margin-left: 0; }
+        .message { margin-left: 0; }
+        .letters-section { min-height: 21rem; }
+        .word-stage { min-height: 19rem; }
+        .letter { font-size: clamp(4.65rem, 23.5vw, 9.75rem); }
+        .footer { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+        .header-actions { gap: 0.55rem; }
+        .sound-toggle { max-width: 8rem; text-align: left; line-height: 1.45; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shooting-stars" id="shooting-stars" aria-hidden="true"></div>
+    <audio id="theme" src="jason-theme.wav" loop preload="metadata"></audio>
+    <div class="page">
+      <header class="header">
+        <a class="brand" href="index.html" aria-label="NODAL home">
+          <span class="brand-dot" aria-hidden="true"></span><span>JASON WORLD</span>
+        </a>
+        <div class="header-actions">
+          <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false"><span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="sound-label">Play dramatic score</span></button>
+          <a class="back-link" href="index.html">Back to index</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="welcome">
+          <p class="eyebrow">A world made for Jason</p>
+          <h1>
+            <span class="welcome-red">Welcome</span>
+            <span class="welcome-green">to Jason World</span>
+          </h1>
+          <p class="message">This is your corner of the web. Step inside, look around, and drag the letters to make it your own.</p>
+        </section>
+
+        <section class="letters-section" aria-labelledby="jason-3d-label">
+          <h2 class="letters-label" id="jason-3d-label">JASON in 3D</h2>
+          <div class="word-stage" id="word-stage" tabindex="0" aria-label="3D JASON letters. Drag to rotate.">
+            <div class="word" id="word" aria-hidden="true"></div>
+          </div>
+          <p class="drag-hint">Drag the letters to rotate</p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span class="status">Jason World online</span>
+        <span><a href="mailto:hello@nodal.studio">Say hello</a></span>
+      </footer>
+    </div>
+
+    <noscript><div style="position:fixed;bottom:1rem;left:1rem;padding:.8rem 1rem;color:#05070a;background:#29ef76;font:12px monospace">JavaScript is required for the 3D letters.</div></noscript>
+    <script>
+      const wordElement = document.getElementById("word");
+      const stage = document.getElementById("word-stage");
+      const colors = ["#ff3b30", "#29ef76", "#ff3b30", "#29ef76", "#ff3b30"];
+      const letters = [..."JASON"];
+      const depth = 44;
+      const interaction = { x: -8, y: 18, targetX: -8, targetY: 18, dragging: false, lastX: 0, lastY: 0, vx: 0, vy: 0 };
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function mix(color, amount) {
+        const value = color.replace("#", "");
+        const source = [0, 2, 4].map((index) => parseInt(value.slice(index, index + 2), 16));
+        const target = [5, 7, 10];
+        return `rgb(${source.map((part, index) => Math.round(part + (target[index] - part) * amount)).join(",")})`;
+      }
+
+      function renderLetters() {
+        wordElement.innerHTML = "";
+        letters.forEach((character, index) => {
+          const letter = document.createElement("span");
+          const color = colors[index % colors.length];
+          letter.className = "letter";
+          letter.style.setProperty("--letter-color", color);
+          letter.style.setProperty("--float-speed", `${4.6 + index * 0.45}s`);
+          letter.style.setProperty("--float-delay", `${index * -0.42}s`);
+          for (let layer = 1; layer <= depth; layer += 1) {
+            const layerElement = document.createElement("span");
+            layerElement.className = "letter-layer";
+            layerElement.textContent = character;
+            layerElement.style.setProperty("--layer", layer);
+            layerElement.style.setProperty("--layer-color", mix(color, 0.18 + (layer / depth) * 0.74));
+            letter.appendChild(layerElement);
+          }
+          const face = document.createElement("span");
+          face.className = "letter-face";
+          face.textContent = character;
+          letter.appendChild(face);
+          wordElement.appendChild(letter);
+        });
+      }
+
+      function animate() {
+        if (!interaction.dragging && !reducedMotion.matches) interaction.targetY += 0.04;
+        interaction.x += (interaction.targetX - interaction.x) * 0.08;
+        interaction.y += (interaction.targetY - interaction.y) * 0.08;
+        interaction.targetX += interaction.vx;
+        interaction.targetY += interaction.vy;
+        interaction.vx *= 0.91;
+        interaction.vy *= 0.91;
+        wordElement.style.transform = `rotateX(${interaction.x.toFixed(2)}deg) rotateY(${interaction.y.toFixed(2)}deg)`;
+        requestAnimationFrame(animate);
+      }
+
+      stage.addEventListener("pointerdown", (event) => {
+        interaction.dragging = true;
+        interaction.lastX = event.clientX;
+        interaction.lastY = event.clientY;
+        stage.classList.add("is-dragging");
+        stage.setPointerCapture?.(event.pointerId);
+      });
+
+      stage.addEventListener("pointermove", (event) => {
+        if (!interaction.dragging) return;
+        const dx = event.clientX - interaction.lastX;
+        const dy = event.clientY - interaction.lastY;
+        interaction.targetY += dx * 0.42;
+        interaction.targetX = Math.max(-68, Math.min(68, interaction.targetX - dy * 0.34));
+        interaction.vx = -dy * 0.012;
+        interaction.vy = dx * 0.016;
+        interaction.lastX = event.clientX;
+        interaction.lastY = event.clientY;
+      });
+
+      function endDrag(event) {
+        interaction.dragging = false;
+        stage.classList.remove("is-dragging");
+        if (stage.hasPointerCapture?.(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+      }
+
+      stage.addEventListener("pointerup", endDrag);
+      stage.addEventListener("pointercancel", endDrag);
+      stage.addEventListener("keydown", (event) => {
+        const amount = event.shiftKey ? 12 : 4;
+        if (event.key === "ArrowLeft") interaction.targetY -= amount;
+        else if (event.key === "ArrowRight") interaction.targetY += amount;
+        else if (event.key === "ArrowUp") interaction.targetX = Math.max(-68, interaction.targetX - amount);
+        else if (event.key === "ArrowDown") interaction.targetX = Math.min(68, interaction.targetX + amount);
+        else return;
+        event.preventDefault();
+      });
+
+      const starField = document.getElementById("shooting-stars");
+      const random = (min, max) => min + Math.random() * (max - min);
+
+      function createShootingStars() {
+        for (let index = 0; index < 28; index += 1) {
+          const star = document.createElement("span");
+          star.className = "shooting-star";
+          star.style.left = `${random(-35, 72)}vw`;
+          star.style.top = `${random(-20, 58)}vh`;
+          star.style.setProperty("--star-length", `${random(4, 11)}rem`);
+          star.style.setProperty("--star-duration", `${random(2.8, 6.8)}s`);
+          star.style.setProperty("--star-delay", `${random(0, 7)}s`);
+          star.style.setProperty("--star-opacity", random(0.35, 0.95).toFixed(2));
+          star.style.setProperty("--star-x", `${random(38, 92)}vw`);
+          star.style.setProperty("--star-y", `${random(18, 68)}vh`);
+          starField.appendChild(star);
+        }
+      }
+
+      const theme = document.getElementById("theme");
+      const soundToggle = document.getElementById("sound-toggle");
+      const soundLabel = document.getElementById("sound-label");
+      let fadeFrame = 0;
+
+      function fadeTheme(target, duration = 900) {
+        cancelAnimationFrame(fadeFrame);
+        const startVolume = theme.volume;
+        const startTime = performance.now();
+        function step(now) {
+          const progress = Math.min(1, (now - startTime) / duration);
+          theme.volume = startVolume + (target - startVolume) * progress;
+          if (progress < 1) fadeFrame = requestAnimationFrame(step);
+          else if (target === 0) theme.pause();
+        }
+        fadeFrame = requestAnimationFrame(step);
+      }
+
+      soundToggle.addEventListener("click", async () => {
+        const shouldPlay = theme.paused;
+        if (shouldPlay) {
+          try {
+            theme.volume = 0;
+            await theme.play();
+            fadeTheme(0.72, 1400);
+            soundToggle.classList.add("is-playing");
+            soundToggle.setAttribute("aria-pressed", "true");
+            soundLabel.textContent = "Dramatic score on";
+          } catch {
+            soundLabel.textContent = "Sound blocked";
+          }
+        } else {
+          fadeTheme(0, 650);
+          soundToggle.classList.remove("is-playing");
+          soundToggle.setAttribute("aria-pressed", "false");
+          soundLabel.textContent = "Play dramatic score";
+        }
+      });
+
+      renderLetters();
+      createShootingStars();
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>
