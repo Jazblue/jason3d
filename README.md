@@ -16,3 +16,5 @@ node server.mjs
 ```
 
 Open `http://127.0.0.1:4173/letters.html` and press **Play dramatic score**.
+
+<!-- trigger rebuild -->
